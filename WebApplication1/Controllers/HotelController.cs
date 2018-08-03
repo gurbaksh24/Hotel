@@ -44,7 +44,7 @@ namespace WebApplication1.Controllers
                     {
                         ApiStatus = ApiStatus.Failure,
                         StatusCode = 500,
-                        ErrorMessage = "Something went wrong"
+                        ErrorMessage = e.Message
                     }
                 };
             }
@@ -56,16 +56,31 @@ namespace WebApplication1.Controllers
             var hotel = hoteList.Find(x => x.HotelId == id);
             try
             {
-                return new ApiResponse()
+                if (hotel != null)
                 {
-                    Hotels = new List<Hotel>() { new Hotel() { HotelId = hotel.HotelId, HotelName = hotel.HotelName, HotelAddress = hotel.HotelAddress, NoOfRooms = hotel.NoOfRooms, AirportCode = hotel.AirportCode } },
-                    Status = new Status()
+                    return new ApiResponse()
                     {
-                        ApiStatus = ApiStatus.Success,
-                        StatusCode = 200,
-                        ErrorMessage = ""
-                    }
-                };
+                        Hotels = new List<Hotel>() { hotel },
+                        Status = new Status()
+                        {
+                            ApiStatus = ApiStatus.Success,
+                            StatusCode = 200,
+                            ErrorMessage = ""
+                        }
+                    };
+                }
+                else
+                {
+                    return new ApiResponse()
+                    {
+                        Status = new Status()
+                        {
+                            ApiStatus = ApiStatus.Failure,
+                            StatusCode = 404,
+                            ErrorMessage = "Resource not found"
+                        }
+                    };
+                }
             }
             catch (Exception e)
             {
@@ -75,8 +90,8 @@ namespace WebApplication1.Controllers
                     Status = new Status()
                     {
                         ApiStatus = ApiStatus.Failure,
-                        StatusCode = 404,
-                        ErrorMessage = "Nothing Found"
+                        StatusCode = 500,
+                        ErrorMessage = e.Message
                     }
                 };
             }
@@ -113,7 +128,7 @@ namespace WebApplication1.Controllers
                     {
                         ApiStatus = ApiStatus.Failure,
                         StatusCode = 500,
-                        ErrorMessage = "Please enter a valid hotel"
+                        ErrorMessage = e.Message
                     }
                 };
             }
@@ -125,16 +140,32 @@ namespace WebApplication1.Controllers
             var hotel = hoteList.Find(x => x.HotelId == id);
             try
             {
-                hoteList.Remove(hotel);
-                return new ApiResponse()
+                if (hotel != null)
                 {
-                    Status = new Status()
+                    hoteList.Remove(hotel);
+                    return new ApiResponse()
                     {
-                        ApiStatus = ApiStatus.Success,
-                        StatusCode = 200,
-                        ErrorMessage = "Hotel"
-                    }
-                };
+                        Status = new Status()
+                        {
+                            ApiStatus = ApiStatus.Success,
+                            StatusCode = 200,
+                            ErrorMessage = "Hotel"
+                        }
+                    };
+                }
+                else
+                {
+                    return new ApiResponse()
+                    {
+                        Hotels = null,
+                        Status = new Status()
+                        {
+                            ApiStatus = ApiStatus.Failure,
+                            StatusCode = 404,
+                            ErrorMessage = "Resource not found"
+                        }
+                    };
+                }
             }
             catch (Exception e)
             {
@@ -143,8 +174,8 @@ namespace WebApplication1.Controllers
                     Status = new Status()
                     {
                         ApiStatus = ApiStatus.Failure,
-                        StatusCode = 404,
-                        ErrorMessage = "Resource not found"
+                        StatusCode = 500,
+                        ErrorMessage = e.Message
                     }
                 };
             }
@@ -156,16 +187,32 @@ namespace WebApplication1.Controllers
             var hotel = hoteList.Find(x => x.HotelId == id);
             try
             {
-                hotel.NoOfRooms--;
-                return new ApiResponse()
+                if (hotel != null)
                 {
-                    Status = new Status()
+                    hotel.NoOfRooms--;
+                    return new ApiResponse()
                     {
-                        ApiStatus = ApiStatus.Success,
-                        StatusCode = 200,
-                        ErrorMessage = "Hotel Successfully Booked"
-                    }
-                };
+                        Status = new Status()
+                        {
+                            ApiStatus = ApiStatus.Success,
+                            StatusCode = 200,
+                            ErrorMessage = "Hotel Successfully Booked"
+                        }
+                    };
+                }
+                else
+                {
+                    return new ApiResponse()
+                    {
+                        Hotels = null,
+                        Status = new Status()
+                        {
+                            ApiStatus = ApiStatus.Failure,
+                            StatusCode = 404,
+                            ErrorMessage = "Resource not found"
+                        }
+                    };
+                }
             }
             catch(Exception e)
             {
@@ -175,7 +222,7 @@ namespace WebApplication1.Controllers
                     {
                         ApiStatus = ApiStatus.Failure,
                         StatusCode = 404,
-                        ErrorMessage = "Hotel Id not found"
+                        ErrorMessage = e.Message
                     }
                 };
             }
